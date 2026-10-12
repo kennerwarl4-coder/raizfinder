@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RaizFinder – Método Completo de Pesquisa Genealógica e Cidadania Europeia</title>
+  <meta name="description" content="Acesse as 6 técnicas para localizar seus antepassados e estruturar seu dossiê de cidadania italiana ou portuguesa sem pagar fortunas a agências."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    /* ─── RESET & FOUNDATION ─── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Dark Theme Palette */
+      --bg: #08080F;
+      --card-bg: #10101E;
+      --card-subtle: #14142A;
+      --card-highlight: #121927;
+      
+      --green: #00C853;
+      --green-glow: rgba(0, 200, 83, 0.4);
+      --green-light: rgba(0, 200, 83, 0.12);
+      --green-border: rgba(0, 200, 83, 0.28);
+      
+      --gold: #F5C518;
+      --red: #C8102E;
+      
+      --text-main: #FFFFFF;
+      --text-muted: rgba(255, 255, 255, 0.7);
+      --text-light: rgba(255, 255, 255, 0.45);
+      
+      --border: rgba(255, 255, 255, 0.08);
+      --border-darker: rgba(255, 255, 255, 0.14);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
+      --shadow-lg: 0 16px 40px -6px rgba(0, 0, 0, 0.8);
+      --shadow-btn: 0 4px 22px rgba(0, 200, 83, 0.42);
+    }
+
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 200, 83, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(200, 16, 46, 0.04) 0px, transparent 50%);
+      background-attachment: fixed;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* ─── TOAST NOTIFICATION VIBRANTE ─── */
+    .toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      z-index: 1001;
+      background: linear-gradient(135deg, #00C853, #009638);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      width: calc(100% - 32px);
+      max-width: 400px;
+      box-shadow: 0 10px 32px rgba(0, 200, 83, 0.5);
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #FFFFFF;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(12px);
+    }
+
+    .toast-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .toast-icon svg {
+      width: 17px;
+      height: 17px;
+      stroke: #FFFFFF;
+    }
+
+    .toast-content {
+      font-size: 0.85rem;
+      line-height: 1.35;
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    .toast-content strong {
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    /* ─── LAYOUT WRAPPER ─── */
+    .sales-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 12px 56px;
+    }
+
+    .page-container {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 480px) {
+      .sales-wrap { padding: 8px 8px 48px; }
+
+      .copy-headline { font-size: 1.05rem; }
+
+      .forwhom-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .compare-container {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .price-amount { font-size: 3.2rem; }
+
+      .hero-cta-strip { font-size: 0.9rem; padding: 18px 12px; }
+
+      .card-body { padding: 16px 14px; }
+
+      .metric-name { font-size: 0.74rem; }
+
+      .deliverables-box { padding: 14px; }
+
+      .guarantee-box { flex-direction: column; text-align: center; }
+      .guarantee-img { width: 80px; height: 80px; }
+
+      .social-strip { flex-direction: column; text-align: center; gap: 10px; }
+      .social-strip-avatars { justify-content: center; }
+    }
+
+    @media (min-width: 481px) and (max-width: 640px) {
+      .page-container { max-width: 100%; }
+      .price-amount { font-size: 3.6rem; }
+    }
+
+    @media (min-width: 641px) {
+      .sales-wrap { padding: 24px 24px 64px; }
+      .page-container { max-width: 520px; }
+      .copy-headline { font-size: 1.3rem; }
+    }
+
+    /* ─── HEADER / BRAND ─── */
+    .app-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 0 20px;
+    }
+
+    .app-logo {
+      height: 56px;
+      width: auto;
+      display: block;
+      transition: transform 0.2s ease;
+    }
+
+    .app-logo:hover {
+      transform: scale(1.02);
+    }
+
+    /* ─── MAIN CARDS ─── */
+    .ui-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .ui-card:hover {
+      border-color: var(--border-darker);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .banner-full-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .card-body {
+      padding: 22px 20px;
+    }
+
+    /* ─── SEÇÃO CONTEÚDO DIRETO / BARRAS 100% ─── */
+    .metric-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .metric-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: #FFFFFF;
+    }
+
+    .metric-score {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 0.84rem;
+      color: var(--gold);
+    }
+
+    /* Barra Segmentada com Gradiente Red -> Green */
+    .metric-bar-track {
+      width: 100%;
+      height: 6px;
+      display: flex;
+      gap: 4px;
+      margin: 4px 0 6px;
+      align-items: center;
+      position: relative;
+    }
+
+    .metric-segment {
+      flex: 1;
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    .seg-1 { background: #EF4444; }
+    .seg-2 { background: #F97316; }
+    .seg-3 { background: #EAB308; }
+    .seg-4 { background: #84CC16; }
+    .seg-5 {
+      background: #00E676;
+      position: relative;
+    }
+
+    .metric-handle-dot {
+      position: absolute;
+      right: -2px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 9px;
+      height: 9px;
+      background: #FFFFFF;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(0, 230, 118, 0.95);
+    }
+
+    .metric-desc {
+      font-size: 0.78rem;
+      line-height: 1.38;
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+
+    /* ─── COMPARISON BOX ─── */
+    .compare-section-title {
+      text-align: center;
+      margin: 8px 0 12px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .compare-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .compare-col {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--card-subtle);
+    }
+
+    .compare-col.without {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .compare-col.with {
+      background: var(--card-highlight);
+      border-color: var(--green-border);
+    }
+
+    .compare-head {
+      padding: 10px 8px;
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.74rem;
+      letter-spacing: 0.04em;
+    }
+
+    .compare-col.without .compare-head {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-light);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .compare-col.with .compare-head {
+      background: var(--green-light);
+      color: var(--green);
+      border-bottom: 1px solid var(--green-border);
+    }
+
+    .compare-row {
+      padding: 9px 10px;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .compare-row:first-child {
+      border-top: none;
+    }
+
+    .compare-bar-rail {
+      margin-top: 5px;
+      height: 4px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .compare-bar-val {
+      height: 100%;
+      border-radius: 3px;
+    }
+
+    .without .compare-bar-val { background: #4B5563; }
+    .with    .compare-bar-val { background: var(--green); }
+
+    /* ─── DELIVERABLES & BONUSES ─── */
+    .deliverables-box {
+      background: var(--card-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .deliverable-section-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .deliverables-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .deliverable-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    .deliverable-check {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      border-radius: 50%;
+      background: var(--green-light);
+      border: 1.5px solid var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    .deliverable-check svg {
+      width: 10px;
+      height: 10px;
+      stroke: var(--green);
+      stroke-width: 2.4;
+    }
+
+    /* ─── COUNTDOWN URGENCY ─── */
+    .countdown-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px;
+      background: var(--card-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: 14px;
+    }
+
+    .countdown-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .countdown-boxes {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .cd-digit {
+      background: var(--green);
+      color: #08080F;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.05rem;
+      padding: 5px 9px;
+      border-radius: 6px;
+      min-width: 34px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 200, 83, 0.4);
+    }
+
+    .cd-colon {
+      font-weight: 800;
+      color: var(--green);
+      font-size: 1.1rem;
+    }
+
+    /* ─── PRICE HIGHLIGHT BOX ─── */
+    .price-box {
+      border: 1.5px solid var(--green-border);
+      background: var(--card-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 0 28px rgba(0, 200, 83, 0.12);
+    }
+
+    .price-box-top {
+      background: var(--green-light);
+      border-bottom: 1px solid var(--green-border);
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    .price-badge-label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .price-box-center {
+      padding: 24px 20px 20px;
+      text-align: center;
+    }
+
+    .price-product-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.05rem;
+      color: var(--text-main);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .price-product-name span {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: none;
+      letter-spacing: 0;
+      margin-top: 2px;
+    }
+
+    .price-value-hero {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+      margin: 14px 0 6px;
+    }
+
+    .price-currency {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: var(--green);
+      line-height: 1;
+    }
+
+    .price-amount {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 4rem;
+      color: var(--green);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      text-shadow: 0 0 28px rgba(0, 200, 83, 0.45);
+    }
+
+    .price-payment-type {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .price-benefit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+    }
+
+    .price-benefit-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.87rem;
+      color: var(--text-main);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .price-benefit-check {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      border-radius: 50%;
+      background: var(--green-light);
+      border: 1.5px solid var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .price-benefit-check svg {
+      width: 10px;
+      height: 10px;
+      stroke: var(--green);
+      stroke-width: 2.4;
+    }
+
+    .price-bonus-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border-top: 1px dashed rgba(255,255,255,0.1);
+      padding-top: 14px;
+      margin-top: 4px;
+    }
+
+    .price-value {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      color: var(--green);
+      letter-spacing: -0.03em;
+      text-shadow: 0 0 18px rgba(0, 200, 83, 0.35);
+    }
+
+    .price-value sup {
+      font-size: 0.55em;
+      vertical-align: super;
+      letter-spacing: 0;
+    }
+
+    /* ─── GUARANTEE BADGE ─── */
+    .guarantee-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--card-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: 18px;
+    }
+
+    .guarantee-img {
+      width: 68px;
+      height: 68px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+
+    .guarantee-content .g-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      margin-bottom: 3px;
+    }
+
+    .guarantee-content .g-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* ─── FINAL HOOK BOX ─── */
+    .final-hook-wrap {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .final-hook-wrap strong {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.05rem, 4.5vw, 1.3rem);
+      line-height: 1.3;
+      color: var(--text-main);
+      display: block;
+    }
+
+    .final-hook-wrap p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    /* ─── CTA BUTTON ─── */
+    .btn-green {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: linear-gradient(135deg, #00E676, #00A844);
+      color: #06080F;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 0.96rem;
+      letter-spacing: 0.02em;
+      text-align: center;
+      padding: 17px 20px;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: var(--shadow-btn);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-green:hover {
+      background: linear-gradient(135deg, #10FF85, #00C853);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 26px rgba(0, 200, 83, 0.55);
+    }
+
+    .btn-green:active {
+      transform: translateY(0);
+    }
+
+    @keyframes subtlePulse {
+      0%, 100% { box-shadow: 0 4px 20px rgba(0, 200, 83, 0.35); }
+      50%      { box-shadow: 0 4px 30px rgba(0, 200, 83, 0.65); }
+    }
+
+    .btn-pulse {
+      animation: subtlePulse 2.4s infinite;
+    }
+
+    .btn-security {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.74rem;
+      color: var(--text-light);
+      font-weight: 500;
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    .btn-security svg {
+      width: 13px;
+      height: 13px;
+      stroke: var(--text-light);
+      flex-shrink: 0;
+    }
+
+    /* ─── HERO CTA STRIP ─── */
+    .hero-cta-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      margin: 0 0 14px;
+      background: linear-gradient(135deg, #00C853, #007A33);
+      color: #FFFFFF;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 0.75rem;
+      letter-spacing: 0.01em;
+      text-align: center;
+      padding: 16px 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 6px 28px rgba(0, 200, 83, 0.45);
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: subtlePulse 2.4s infinite;
+    }
+
+    .hero-cta-strip:hover {
+      background: linear-gradient(135deg, #00E676, #009638);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 200, 83, 0.6);
+    }
+
+    .hero-cta-strip svg {
+      flex-shrink: 0;
+      stroke: #FFFFFF;
+    }
+
+    .hero-cta-strip .cta-sub {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 0.03em;
+      margin-top: 3px;
+    }
+
+    .hero-cta-strip-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.25;
+    }
+
+    /* ─── PERSUASIVE TEXT SECTIONS ─── */
+    .copy-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      margin-bottom: 14px;
+    }
+
+    .copy-section.dark-accent {
+      background: var(--card-subtle);
+      border-color: var(--border-darker);
+    }
+
+    .copy-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+
+    .copy-headline {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.1rem, 5vw, 1.35rem);
+      line-height: 1.25;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    .copy-headline em {
+      color: var(--green);
+      font-style: normal;
+    }
+
+    .copy-body {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .copy-body strong {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .copy-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .copy-list-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--text-main);
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    .copy-list-icon {
+      font-size: 1rem;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .copy-highlight-box {
+      background: var(--green-light);
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      font-size: 0.88rem;
+      color: var(--text-main);
+      font-weight: 600;
+      line-height: 1.55;
+      margin-top: 4px;
+    }
+
+    .copy-highlight-box span {
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .copy-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 18px 0;
+    }
+
+    /* Para quem é */
+    .forwhom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .forwhom-card {
+      border-radius: var(--radius-md);
+      padding: 14px 12px;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    .forwhom-card.yes {
+      background: var(--green-light);
+      border: 1px solid var(--green-border);
+      color: var(--text-main);
+    }
+
+    .forwhom-card.no {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: var(--text-muted);
+    }
+
+    .forwhom-card-head {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .forwhom-card.yes .forwhom-card-head { color: var(--green); }
+    .forwhom-card.no  .forwhom-card-head { color: var(--text-light); }
+
+    .forwhom-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .forwhom-item:last-child { margin-bottom: 0; }
+
+    .forwhom-dot {
+      font-size: 0.78rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Social proof strip */
+    .social-strip {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card-subtle);
+      border: 1px solid var(--border-darker);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .social-strip-avatars {
+      display: flex;
+      flex-shrink: 0;
+    }
+
+    .social-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--green-light);
+      border: 2px solid var(--card-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.72rem;
+      color: var(--green);
+      margin-left: -10px;
+    }
+
+    .social-avatar:first-child { margin-left: 0; }
+
+    .social-strip-text {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .social-strip-text strong {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    /* ─── FOOTER ─── */
+    .app-footer {
+      text-align: center;
+      padding: 24px 16px 0;
+      font-size: 0.74rem;
+      color: var(--text-light);
+      line-height: 1.7;
+    }
+
+    .app-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .app-footer a:hover {
+      color: var(--green);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Social Proof Notification Toast (Verde Vibrante) -->
+  <div class="toast" id="toast">
+    <div class="toast-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+    </div>
+    <div class="toast-content" id="toast-msg">
+      <strong>Mariana L.</strong> acabou de adquirir o método
+    </div>
+  </div>
+
+  <div class="sales-wrap">
+    <div class="page-container">
+
+      <!-- Header com Logo RaizFinder -->
+      <header class="app-header">
+        <img src="assets/logo-raizfinder.png" class="app-logo" alt="RaizFinder"/>
+      </header>
+
+      <!-- ══════════════════════════════════════════════════════════
+           BANNER 1: DESCUBRA SUAS RAÍZES
+      ══════════════════════════════════════════════════════════ -->
+      <div class="ui-card" style="border-radius: 0; overflow: hidden;">
+        <img src="assets/raizfinder_descubra_suas_raizes_refeita.png" alt="Descubra Suas Raízes - Cidadania Italiana e Portuguesa" class="banner-full-img" loading="eager"/>
+      </div>
+
+      <!-- CTA HERO — Ponta a ponta, logo abaixo da primeira imagem -->
+      <a href="#oferta" class="hero-cta-strip">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+        <div class="hero-cta-strip-inner">
+          QUERO AS 6 TÉCNICAS AGORA
+          <span class="cta-sub">Acesso imediato · Garantia de 7 dias</span>
+        </div>
+      </a>
+
+      <!-- ─── SEÇÃO PROBLEMA / HOOK ─── -->
+      <div class="copy-section">
+        <div class="copy-eyebrow">🔍 O problema que ninguém te conta</div>
+        <h2 class="copy-headline">Você já tentou pesquisar sua <em>cidadania italiana ou portuguesa</em> e não saiu do lugar?</h2>
+        <p class="copy-body">
+          A maioria das pessoas passa <strong>meses em loop</strong> — pesquisando no Google, entrando em grupos, pedindo indicação — e no fim ainda não sabe o nome da cidade de origem do bisavô. Não é falta de esforço. É falta de <strong>método</strong>.
+        </p>
+        <div class="copy-list">
+          <div class="copy-list-item">
+            <span class="copy-list-icon">❌</span>
+            Pesquisar aleatoriamente no FamilySearch sem saber o que procurar
+          </div>
+          <div class="copy-list-item">
+            <span class="copy-list-icon">❌</span>
+            Pagar R$ 5.000 – R$ 15.000 a uma agência só pra ela fazer o que você poderia fazer sozinho
+          </div>
+          <div class="copy-list-item">
+            <span class="copy-list-icon">❌</span>
+            Mandar email pra arquivo italiano e não receber resposta porque pediu a coisa errada
+          </div>
+          <div class="copy-list-item">
+            <span class="copy-list-icon">❌</span>
+            Meses de espera sem nenhum avanço real no dossiê
+          </div>
+        </div>
+        <div class="copy-highlight-box">
+          O RaizFinder elimina tudo isso. Você recebe o <span>roteiro exato</span> — da cidade de origem até o dossiê completo — sem enrolação.
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           BANNER 2: MÉTODO GRÁFICO
+      ══════════════════════════════════════════════════════════ -->
+      <div class="ui-card">
+        <img src="assets/raizfinder_metodo_grafico.png" alt="Sua História Tem Uma Origem - O RaizFinder Mostra Como Investigar" class="banner-full-img" loading="eager"/>
+      </div>
+
+      <!-- ─── SEÇÃO: O QUE VOCÊ VAI DESCOBRIR ─── -->
+      <div class="copy-section dark-accent">
+        <div class="copy-eyebrow">📌 O método em detalhe</div>
+        <h2 class="copy-headline">6 técnicas que te levam da dúvida ao <em>arquivo certo</em></h2>
+        <p class="copy-body">
+          Cada técnica foi desenvolvida a partir de pesquisas reais — com erros, testes e ajustes — até chegar no que <strong>de fato funciona</strong> para encontrar antepassados italianos e portugueses.
+        </p>
+        <div class="copy-list">
+          <div class="copy-list-item">
+            <span class="copy-list-icon">✅</span>
+            <span><strong>Técnica 1:</strong> Como localizar a cidade de origem com base no sobrenome e na região</span>
+          </div>
+          <div class="copy-list-item">
+            <span class="copy-list-icon">✅</span>
+            <span><strong>Técnica 2:</strong> Os arquivos certos para Itália e Portugal — e como acessá-los online</span>
+          </div>
+          <div class="copy-list-item">
+            <span class="copy-list-icon">✅</span>
+            <span><strong>Técnica 3:</strong> Como montar a árvore genealógica sem erro para o dossiê</span>
+          </div>
+          <div class="copy-list-item">
+            <span class="copy-list-icon">✅</span>
+            <span><strong>Técnica 4:</strong> Como solicitar documentos ao consulado sem devolução</span>
+          </div>
+          <div class="copy-list-item">
+            <span class="copy-list-icon">✅</span>
+            <span><strong>Técnica 5:</strong> Script para conversar com parentes idosos e extrair informações</span>
+          </div>
+          <div class="copy-list-item">
+            <span class="copy-list-icon">✅</span>
+            <span><strong>Técnica 6:</strong> Checklist final para revisar o dossiê antes de protocolar</span>
+          </div>
+        </div>
+        <a href="#oferta" class="btn-green" style="border-radius: var(--radius-md); font-size: 0.88rem; padding: 14px 18px;">
+          Quero as 6 técnicas — R$ 37,90
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           BANNER 3: POR QUE O MÉTODO AJUDA?
+      ══════════════════════════════════════════════════════════ -->
+      <div class="ui-card" style="padding: 12px 14px; background: var(--card-bg);">
+        <img src="assets/raizfinder_por_que_funciona_transparente.png" alt="Por que o método ajuda? RaizFinder" class="banner-full-img" loading="eager"/>
+      </div>
+
+      <!-- ─── SEÇÃO: PARA QUEM É ─── -->
+      <div class="copy-section">
+        <div class="copy-eyebrow">🎯 Para quem é o RaizFinder?</div>
+        <h2 class="copy-headline">Esse método é pra você <em>se...</em></h2>
+        <div class="forwhom-grid">
+          <div class="forwhom-card yes">
+            <div class="forwhom-card-head">✔ É pra você</div>
+            <div class="forwhom-item"><span class="forwhom-dot">•</span>Tem antepassados italianos ou portugueses</div>
+            <div class="forwhom-item"><span class="forwhom-dot">•</span>Quer fazer a pesquisa sozinho e economizar</div>
+            <div class="forwhom-item"><span class="forwhom-dot">•</span>Está cansado de tentar sem sair do lugar</div>
+            <div class="forwhom-item"><span class="forwhom-dot">•</span>Quer um roteiro claro e testado</div>
+          </div>
+          <div class="forwhom-card no">
+            <div class="forwhom-card-head">✕ Não é pra você</div>
+            <div class="forwhom-item"><span class="forwhom-dot">•</span>Se não tem origens europeias</div>
+            <div class="forwhom-item"><span class="forwhom-dot">•</span>Se prefere pagar agência pra fazer tudo</div>
+            <div class="forwhom-item"><span class="forwhom-dot">•</span>Se não quer se envolver no processo</div>
+            <div class="forwhom-item"><span class="forwhom-dot">•</span>Se não tem 30 minutos por dia pra dedicar</div>
+          </div>
+        </div>
+        <hr class="copy-divider">
+        <p class="copy-body" style="margin:0; font-size:0.85rem;">
+          Se você se identificou com a coluna verde, o RaizFinder é exatamente o que você precisa. Mais de <strong>centenas de pessoas já usaram esse método</strong> para descobrir a cidade de origem dos seus antepassados em dias — não meses.
+        </p>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           SEÇÃO: PESQUISA DIRETA / CONTEÚDO DIRETO SEM BUSCA ALEATÓRIA
+      ══════════════════════════════════════════════════════════ -->
+      <div class="ui-card">
+        <img src="assets/raizfinder_pesquisa_direta.png" alt="Pesquisa Direta Sem Busca Aleatória - RaizFinder" class="banner-full-img" loading="eager"/>
+        
+        <div class="card-body">
+          <div class="metric-list">
+
+            <!-- Item 1 -->
+            <div class="metric-item">
+              <div class="metric-head">
+                <span class="metric-name">ACESSO DIRETO A ARQUIVOS E REGISTROS</span>
+                <span class="metric-score">100%</span>
+              </div>
+              <div class="metric-bar-track">
+                <div class="metric-segment seg-1"></div>
+                <div class="metric-segment seg-2"></div>
+                <div class="metric-segment seg-3"></div>
+                <div class="metric-segment seg-4"></div>
+                <div class="metric-segment seg-5">
+                  <div class="metric-handle-dot"></div>
+                </div>
+              </div>
+              <p class="metric-desc">Sem intermediários sem enrolação. Contato real e validado.</p>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="metric-item">
+              <div class="metric-head">
+                <span class="metric-name">FONTES E ARQUIVOS CONFIÁVEIS E TESTADOS</span>
+                <span class="metric-score">100%</span>
+              </div>
+              <div class="metric-bar-track">
+                <div class="metric-segment seg-1"></div>
+                <div class="metric-segment seg-2"></div>
+                <div class="metric-segment seg-3"></div>
+                <div class="metric-segment seg-4"></div>
+                <div class="metric-segment seg-5">
+                  <div class="metric-handle-dot"></div>
+                </div>
+              </div>
+              <p class="metric-desc">Busca segura com quem já faz isso todos os dias.</p>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="metric-item">
+              <div class="metric-head">
+                <span class="metric-name">SEGURANÇA PARA PESQUISAR SEM MEDO</span>
+                <span class="metric-score">100%</span>
+              </div>
+              <div class="metric-bar-track">
+                <div class="metric-segment seg-1"></div>
+                <div class="metric-segment seg-2"></div>
+                <div class="metric-segment seg-3"></div>
+                <div class="metric-segment seg-4"></div>
+                <div class="metric-segment seg-5">
+                  <div class="metric-handle-dot"></div>
+                </div>
+              </div>
+              <p class="metric-desc">Guia + suporte pra você avançar com tranquilidade.</p>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="metric-item">
+              <div class="metric-head">
+                <span class="metric-name">ECONOMIA DE ATÉ 95% EM RELAÇÃO A AGÊNCIAS</span>
+                <span class="metric-score">100%</span>
+              </div>
+              <div class="metric-bar-track">
+                <div class="metric-segment seg-1"></div>
+                <div class="metric-segment seg-2"></div>
+                <div class="metric-segment seg-3"></div>
+                <div class="metric-segment seg-4"></div>
+                <div class="metric-segment seg-5">
+                  <div class="metric-handle-dot"></div>
+                </div>
+              </div>
+              <p class="metric-desc">Veja a diferença nos preços e pare de gastar fortunas.</p>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="metric-item">
+              <div class="metric-head">
+                <span class="metric-name">ROTEIRO PRÁTICO OU INDEPENDÊNCIA TOTAL</span>
+                <span class="metric-score">100%</span>
+              </div>
+              <div class="metric-bar-track">
+                <div class="metric-segment seg-1"></div>
+                <div class="metric-segment seg-2"></div>
+                <div class="metric-segment seg-3"></div>
+                <div class="metric-segment seg-4"></div>
+                <div class="metric-segment seg-5">
+                  <div class="metric-handle-dot"></div>
+                </div>
+              </div>
+              <p class="metric-desc">Seja para Itália ou Portugal o resultado vem rápido.</p>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="metric-item">
+              <div class="metric-head">
+                <span class="metric-name">GARANTIA DE SATISFAÇÃO OU SEU DINHEIRO DE VOLTA</span>
+                <span class="metric-score">100%</span>
+              </div>
+              <div class="metric-bar-track">
+                <div class="metric-segment seg-1"></div>
+                <div class="metric-segment seg-2"></div>
+                <div class="metric-segment seg-3"></div>
+                <div class="metric-segment seg-4"></div>
+                <div class="metric-segment seg-5">
+                  <div class="metric-handle-dot"></div>
+                </div>
+              </div>
+              <p class="metric-desc">7 dias pra testar sem risco. Compra segura resultado certo.</p>
+            </div>
+
+          </div>
+
+          <a href="#oferta" class="btn-green btn-pulse" style="margin-top: 20px;">
+            Tô Dentro, Próximo Passo
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- ─── SOCIAL PROOF STRIP ANTES DA OFERTA ─── -->
+      <div class="social-strip">
+        <div class="social-strip-avatars">
+          <div class="social-avatar">ML</div>
+          <div class="social-avatar">CR</div>
+          <div class="social-avatar">FP</div>
+          <div class="social-avatar">AS</div>
+          <div class="social-avatar">JM</div>
+        </div>
+        <div class="social-strip-text">
+          <strong>+347 pessoas</strong> já adquiriram o método e estão avançando na pesquisa da cidadania.
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           SEÇÃO PRINCIPAL DE OFERTA
+      ══════════════════════════════════════════════════════════ -->
+      <div class="ui-card" id="oferta">
+        <div class="card-body">
+
+          <!-- Comparativo Sem vs Com o Método -->
+          <div class="compare-section-title">
+            Sem vs. Com o Método
+          </div>
+
+          <div class="compare-container">
+            <div class="compare-col without">
+              <div class="compare-head">SEM O MÉTODO</div>
+              <div class="compare-row">
+                Pesquisa aleatória
+                <div class="compare-bar-rail"><div class="compare-bar-val" style="width:22%"></div></div>
+              </div>
+              <div class="compare-row">
+                Sem saber onde pedir
+                <div class="compare-bar-rail"><div class="compare-bar-val" style="width:15%"></div></div>
+              </div>
+              <div class="compare-row">
+                Meses sem resultado
+                <div class="compare-bar-rail"><div class="compare-bar-val" style="width:18%"></div></div>
+              </div>
+              <div class="compare-row">
+                Orçamento R$ 15k
+                <div class="compare-bar-rail"><div class="compare-bar-val" style="width:12%"></div></div>
+              </div>
+            </div>
+
+            <div class="compare-col with">
+              <div class="compare-head">COM O MÉTODO</div>
+              <div class="compare-row">
+                Cidade em dias
+                <div class="compare-bar-rail"><div class="compare-bar-val" style="width:95%"></div></div>
+              </div>
+              <div class="compare-row">
+                Arquivos certos
+                <div class="compare-bar-rail"><div class="compare-bar-val" style="width:97%"></div></div>
+              </div>
+              <div class="compare-row">
+                Resultado em semanas
+                <div class="compare-bar-rail"><div class="compare-bar-val" style="width:94%"></div></div>
+              </div>
+              <div class="compare-row">
+                Você mesmo por R$ 37,90
+                <div class="compare-bar-rail"><div class="compare-bar-val" style="width:99%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- O que você recebe & Bônus exclusivos -->
+          <div class="deliverables-box">
+            <div class="deliverable-section-title">O QUE VOCÊ RECEBE</div>
+            <div class="deliverables-list" style="margin-bottom:16px;">
+              <div class="deliverable-row">
+                <div class="deliverable-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                As 6 Técnicas explicadas passo a passo
+              </div>
+              <div class="deliverable-row">
+                <div class="deliverable-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                Modelos prontos de árvore genealógica
+              </div>
+              <div class="deliverable-row">
+                <div class="deliverable-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                Checklists separados: Itália + Portugal
+              </div>
+              <div class="deliverable-row">
+                <div class="deliverable-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                Lista prioritária de arquivos e sites
+              </div>
+            </div>
+
+            <div class="deliverable-section-title">BÔNUS EXCLUSIVOS</div>
+            <div class="deliverables-list">
+              <div class="deliverable-row">
+                <div class="deliverable-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                Planilha de Árvore Genealógica Editável
+              </div>
+              <div class="deliverable-row">
+                <div class="deliverable-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                Checklist Completo (Itália + Portugal)
+              </div>
+              <div class="deliverable-row">
+                <div class="deliverable-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                Lista Prioritária de Arquivos e Sites
+              </div>
+              <div class="deliverable-row">
+                <div class="deliverable-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                Mini-guia: Conversar com parentes idosos
+              </div>
+            </div>
+          </div>
+
+          <!-- Countdown Timer de Urgência -->
+          <div class="countdown-bar">
+            <span class="countdown-label">Oferta expira em</span>
+            <div class="countdown-boxes">
+              <span class="cd-digit" id="cd-min">09</span>
+              <span class="cd-colon">:</span>
+              <span class="cd-digit" id="cd-sec">58</span>
+            </div>
+          </div>
+
+          <!-- Price Highlight Box -->
+          <div class="price-box">
+            <div class="price-box-top">
+              <span class="price-badge-label">✦ Acesso Vitalício Imediato ✦</span>
+            </div>
+            <div class="price-box-center">
+              <div class="price-product-name">
+                RAIZFINDER
+                <span>O método completo de pesquisa genealógica</span>
+              </div>
+
+              <div class="price-value-hero">
+                <span class="price-currency">R$</span>
+                <span class="price-amount">37<small style="font-size:0.55em;letter-spacing:0">,90</small></span>
+              </div>
+              <div class="price-payment-type">pagamento único · acesso imediato</div>
+
+              <div class="price-benefit-list">
+                <div class="price-benefit-row">
+                  <div class="price-benefit-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                  As 6 Técnicas explicadas passo a passo
+                </div>
+                <div class="price-benefit-row">
+                  <div class="price-benefit-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                  Modelos prontos de árvore genealógica
+                </div>
+                <div class="price-benefit-row">
+                  <div class="price-benefit-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                  Checklists separados: Itália + Portugal
+                </div>
+                <div class="price-benefit-row">
+                  <div class="price-benefit-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                  Lista prioritária de arquivos e sites
+                </div>
+
+                <div class="price-bonus-title">🎁 Bônus Exclusivos Inclusos</div>
+
+                <div class="price-benefit-row">
+                  <div class="price-benefit-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                  Planilha de Árvore Genealógica Editável
+                </div>
+                <div class="price-benefit-row">
+                  <div class="price-benefit-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                  Checklist Completo (Itália + Portugal)
+                </div>
+                <div class="price-benefit-row">
+                  <div class="price-benefit-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                  Lista Prioritária de Arquivos e Sites
+                </div>
+                <div class="price-benefit-row">
+                  <div class="price-benefit-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5"/></svg></div>
+                  Mini-guia: Conversar com parentes idosos
+                </div>
+              </div>
+
+              <!-- CTA dentro do card de oferta -->
+              <a href="#cta-final" class="hero-cta-strip" style="margin-top: 20px; border-radius: var(--radius-md);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+                <div class="hero-cta-strip-inner">
+                  QUERO AS 6 TÉCNICAS AGORA
+                  <span class="cta-sub">Acesso imediato · Garantia de 7 dias</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Garantia 7 Dias -->
+          <div class="guarantee-box">
+            <img src="assets/quiz-guarantee.jpg" class="guarantee-img" alt="Garantia 7 dias"/>
+            <div class="guarantee-content">
+              <div class="g-title">Garantia 7 dias</div>
+              <div class="g-desc">Testa tudo. Não gostou? Reembolso de 100% do dinheiro. Sem perguntas. Risco zero.</div>
+            </div>
+          </div>
+
+          <!-- Final Hook & CTA -->
+          <div class="final-hook-wrap">
+            <strong>Sua pesquisa começa agora.<br>Seu dossiê também.</strong>
+            <p>Acesso imediato após o pagamento. Sem espera.</p>
+          </div>
+
+          <a href="#" class="btn-green btn-pulse" id="cta-final">
+            QUERO AS 6 TÉCNICAS AGORA — R$ 37,90
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+
+          <div class="btn-security">
+            <svg viewBox="0 0 12 12" fill="none" stroke-width="1.2" stroke-linejoin="round">
+              <path d="M6 1L2 3v3c0 2.2 1.7 4.2 4 4.9C8.3 10.2 10 8.2 10 6V3L6 1z"/>
+            </svg>
+            Compra segura · Acesso imediato · 7 dias de garantia
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Rodapé -->
+      <footer class="app-footer">
+        © 2024 RaizFinder. Todos os direitos reservados.<br>
+        Este produto é digital. Resultados individuais variam.<br>
+        <a href="#">Política de Privacidade</a> · <a href="#">Termos de Uso</a>
+      </footer>
+
+    </div>
+  </div>
+
+  <script>
+  // ── Countdown Timer (09:58) ───────────────────
+  (function initCountdown() {
+    const KEY = 'rf_sales_cd_v2';
+    let end = parseInt(sessionStorage.getItem(KEY), 10);
+    if (!end || end < Date.now()) {
+      end = Date.now() + (9 * 60 + 58) * 1000;
+      sessionStorage.setItem(KEY, end);
+    }
+
+    const minEl = document.getElementById('cd-min');
+    const secEl = document.getElementById('cd-sec');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function tick() {
+      const diff = Math.max(0, end - Date.now());
+      minEl.textContent = pad(Math.floor(diff / 60000));
+      secEl.textContent = pad(Math.floor((diff % 60000) / 1000));
+      if (diff > 0) setTimeout(tick, 500);
+    }
+    tick();
+  })();
+
+  // ── Notificação de Compra (Verde Vibrante + Intervalo Mais Longo) ──
+  const buyers = [
+    'Mariana L.',
+    'Carlos R.',
+    'Fernanda P.',
+    'André S.',
+    'Juliana M.',
+    'Rodrigo T.',
+    'Beatriz C.',
+    'Lucas V.',
+    'Camila D.',
+    'Felipe M.'
+  ];
+
+  let toastIdx = 0;
+
+  function showToast() {
+    const t = document.getElementById('toast');
+    const name = buyers[toastIdx % buyers.length];
+    document.getElementById('toast-msg').innerHTML = `<strong>${name}</strong> acabou de adquirir o método`;
+    t.classList.add('show');
+    toastIdx++;
+    setTimeout(() => t.classList.remove('show'), 4200);
+  }
+
+  // Intervalo mais longo e natural (primeiro aos 8s, depois a cada 24s)
+  setTimeout(showToast, 8000);
+  setInterval(showToast, 24000);
+  </script>
+
+</body>
+</html>
