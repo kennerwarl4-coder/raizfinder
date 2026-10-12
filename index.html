@@ -151,7 +151,7 @@
 
       .hero-cta-strip { font-size: 0.9rem; padding: 18px 12px; }
 
-      .card-body { padding: 16px 14px; }
+      .card-body { padding: 14px 2px; }
 
       .metric-name { font-size: 0.74rem; }
 
@@ -195,20 +195,13 @@
       transform: scale(1.02);
     }
 
-    /* ─── MAIN CARDS ─── */
+    /* ─── MAIN CARDS & BANNERS ─── */
     .ui-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-md);
       overflow: hidden;
-      box-shadow: var(--shadow-md);
-      margin-bottom: 14px;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .ui-card:hover {
-      border-color: var(--border-darker);
-      box-shadow: var(--shadow-lg);
+      margin-bottom: 16px;
     }
 
     picture {
@@ -231,10 +224,11 @@
       width: 100%;
       height: auto;
       display: block;
+      border-radius: var(--radius-md);
     }
 
     .card-body {
-      padding: 22px 20px;
+      padding: 16px 2px;
     }
 
     /* ─── SEÇÃO CONTEÚDO DIRETO / BARRAS 100% ─── */
@@ -833,16 +827,16 @@
 
     /* ─── PERSUASIVE TEXT SECTIONS ─── */
     .copy-section {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 24px 20px;
+      background: transparent;
+      border: none;
+      padding: 14px 2px 20px;
       margin-bottom: 14px;
     }
 
     .copy-section.dark-accent {
-      background: var(--card-subtle);
-      border-color: var(--border-darker);
+      background: transparent;
+      border: none;
+      padding: 14px 2px 20px;
     }
 
     .copy-eyebrow {
@@ -1140,7 +1134,7 @@
       <!-- ══════════════════════════════════════════════════════════
            BANNER 1: DESCUBRA SUAS RAÍZES
       ══════════════════════════════════════════════════════════ -->
-      <div class="ui-card" style="border-radius: 0; overflow: hidden;">
+      <div class="ui-card">
         <picture>
           <source srcset="assets/raizfinder_descubra_suas_raizes_refeita.webp" type="image/webp"/>
           <img src="assets/raizfinder_descubra_suas_raizes_refeita.png" alt="Descubra Suas Raízes - Cidadania Italiana e Portuguesa" class="banner-full-img" loading="eager" fetchpriority="high" decoding="async" width="520" height="780"/>
@@ -1239,7 +1233,7 @@
       <!-- ══════════════════════════════════════════════════════════
            BANNER 3: POR QUE O MÉTODO AJUDA?
       ══════════════════════════════════════════════════════════ -->
-      <div class="ui-card" style="padding: 12px 14px; background: var(--card-bg);">
+      <div class="ui-card">
         <picture>
           <source srcset="assets/raizfinder_por_que_funciona_transparente.webp" type="image/webp"/>
           <img src="assets/raizfinder_por_que_funciona_transparente.png" alt="Por que o método ajuda? RaizFinder" class="banner-full-img" loading="lazy" decoding="async" width="520" height="520"/>
