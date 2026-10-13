@@ -517,7 +517,7 @@
       border-radius: var(--radius-md);
       overflow: hidden;
       margin-bottom: 16px;
-      box-shadow: 0 0 28px rgba(0, 200, 83, 0.12);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
     }
 
     .price-box-top {
@@ -565,12 +565,33 @@
       margin-top: 2px;
     }
 
+    /* Preço Âncora */
+    .price-anchor {
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 14px;
+      margin-bottom: 2px;
+      letter-spacing: 0.01em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .price-anchor-strike {
+      text-decoration: line-through;
+      text-decoration-color: #FF5252;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
     .price-value-hero {
       display: flex;
       align-items: baseline;
       justify-content: center;
       gap: 4px;
-      margin: 14px 0 6px;
+      margin: 8px 0 6px;
     }
 
     .price-currency {
@@ -579,6 +600,7 @@
       font-size: 1.5rem;
       color: var(--green);
       line-height: 1;
+      text-shadow: none;
     }
 
     .price-amount {
@@ -588,7 +610,7 @@
       color: var(--green);
       line-height: 1;
       letter-spacing: -0.04em;
-      text-shadow: 0 0 28px rgba(0, 200, 83, 0.45);
+      text-shadow: none;
     }
 
     .price-payment-type {
@@ -656,7 +678,7 @@
       font-size: 2.2rem;
       color: var(--green);
       letter-spacing: -0.03em;
-      text-shadow: 0 0 18px rgba(0, 200, 83, 0.35);
+      text-shadow: none;
     }
 
     .price-value sup {
@@ -698,6 +720,136 @@
       font-size: 0.8rem;
       color: var(--text-muted);
       line-height: 1.55;
+    }
+
+    /* ─── FAQ ACCORDION SECTION ─── */
+    .faq-container {
+      margin-top: 26px;
+      margin-bottom: 22px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .faq-badge {
+      display: inline-block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-light);
+      border: 1px solid var(--green-border);
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 8px;
+    }
+
+    .faq-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.15rem, 4.5vw, 1.35rem);
+      color: var(--text-main);
+      margin-bottom: 5px;
+      line-height: 1.25;
+    }
+
+    .faq-subtitle {
+      font-size: 0.81rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .faq-item {
+      background: var(--card-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .faq-item[open] {
+      border-color: var(--green-border);
+      background: rgba(16, 16, 30, 0.95);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .faq-question {
+      padding: 14px 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.86rem;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      user-select: none;
+      list-style: none;
+      transition: color 0.15s ease;
+    }
+
+    .faq-question::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-question:hover {
+      color: #00E676;
+    }
+
+    .faq-icon {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .faq-icon svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2.6;
+    }
+
+    .faq-item[open] .faq-icon {
+      transform: rotate(180deg);
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .faq-answer {
+      padding: 0 16px 16px 16px;
+      font-size: 0.81rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 12px;
+    }
+
+    .faq-answer p {
+      margin: 0;
+    }
+
+    .faq-answer strong {
+      color: #FFFFFF;
+      font-weight: 600;
     }
 
     /* ─── FINAL HOOK BOX ─── */
@@ -1544,6 +1696,10 @@
                 <span>O método completo de pesquisa genealógica</span>
               </div>
 
+              <div class="price-anchor">
+                de <span class="price-anchor-strike">167,90</span> por apenas
+              </div>
+
               <div class="price-value-hero">
                 <span class="price-currency">R$</span>
                 <span class="price-amount">37<small style="font-size:0.55em;letter-spacing:0">,90</small></span>
@@ -1608,6 +1764,121 @@
             <div class="guarantee-content">
               <div class="g-title">Garantia 7 dias</div>
               <div class="g-desc">Testa tudo. Não gostou? Reembolso de 100% do dinheiro. Sem perguntas. Risco zero.</div>
+            </div>
+          </div>
+
+          <!-- ─── SEÇÃO FAQ (PERGUNTAS FREQUENTES) ─── -->
+          <div class="faq-container" id="faq">
+            <div class="faq-header">
+              <span class="faq-badge">TIRE SUAS DÚVIDAS</span>
+              <h3 class="faq-title">Perguntas Frequentes</h3>
+              <p class="faq-subtitle">Tudo o que você precisa saber antes de iniciar sua busca pelas raízes familiares</p>
+            </div>
+
+            <div class="faq-list">
+              <!-- Pergunta 1: Ponto de partida zero -->
+              <details class="faq-item" open>
+                <summary class="faq-question">
+                  <span>1. Não tenho quase nenhuma informação sobre meus antepassados. O método serve para mim?</span>
+                  <span class="faq-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </span>
+                </summary>
+                <div class="faq-answer">
+                  <p><strong>Sim, com certeza!</strong> O RaizFinder foi criado especialmente para quem está começando do absoluto zero. As Técnicas 1 e 2 ensinam como puxar o primeiro fio da meada usando apenas certidões que você já tem em casa (como certidões de nascimento ou casamento dos seus pais e avós) e cruzar esses dados com acervos públicos gratuitos para descobrir nomes completos, datas e a cidade ou província de origem exata na Europa.</p>
+                </div>
+              </details>
+
+              <!-- Pergunta 2: Assessoria cara vs método próprio -->
+              <details class="faq-item">
+                <summary class="faq-question">
+                  <span>2. Preciso contratar uma assessoria ou advogado para encontrar esses documentos?</span>
+                  <span class="faq-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </span>
+                </summary>
+                <div class="faq-answer">
+                  <p><strong>Não!</strong> Agências e assessorias cobram facilmente entre R$ 5.000 e R$ 20.000 para fazer exatamente essa mesma investigação que você aprenderá a fazer. O RaizFinder entrega o caminho das pedras: onde buscar online, como solicitar as certidões diretamente aos arquivos da Itália ou Portugal e pagar apenas as taxas oficiais de emissão de cada cartório ou paróquia (frequentemente menos de 15 a 30 euros).</p>
+                </div>
+              </details>
+
+              <!-- Pergunta 3: Itália e Portugal -->
+              <details class="faq-item">
+                <summary class="faq-question">
+                  <span>3. O método funciona tanto para cidadania italiana quanto para portuguesa?</span>
+                  <span class="faq-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </span>
+                </summary>
+                <div class="faq-answer">
+                  <p><strong>Sim, atende com precisão aos dois casos!</strong> O material traz rotas e checklists independentes para cada nacionalidade: para a <strong>Itália</strong>, aborda os Arquivos de Estado (Archivio di Stato), paróquias, dioceses e comunas; para <strong>Portugal</strong>, orienta o passo a passo nos Arquivos Distritais, plataforma Tombo e Conservatórias do Registro Civil.</p>
+                </div>
+              </details>
+
+              <!-- Pergunta 4: Idioma e caligrafia arcaica -->
+              <details class="faq-item">
+                <summary class="faq-question">
+                  <span>4. Não sei falar italiano nem português arcaico. Vou conseguir achar e pedir os registros?</span>
+                  <span class="faq-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </span>
+                </summary>
+                <div class="faq-answer">
+                  <p><strong>Totalmente!</strong> Você não precisa falar nenhum outro idioma nem entender termos jurídicos antigos. Dentro do RaizFinder você recebe <strong>modelos prontos de e-mail e requerimentos formais</strong> já traduzidos com os termos aceitos pelos oficiais europeus — é só preencher seus dados e enviar. Além disso, ensinamos macetes práticos para decifrar caligrafias antigas e variações de sobrenomes abrasileirados.</p>
+                </div>
+              </details>
+
+              <!-- Pergunta 5: Entrega e formato -->
+              <details class="faq-item">
+                <summary class="faq-question">
+                  <span>5. Como e quando receberei o acesso ao material?</span>
+                  <span class="faq-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </span>
+                </summary>
+                <div class="faq-answer">
+                  <p><strong>O acesso é imediato e 100% digital.</strong> Assim que o seu pagamento for aprovado (via PIX cai na hora; cartão de crédito em até 2 minutos), você recebe um e-mail com seus dados de login exclusivos. Todo o conteúdo pode ser acessado imediatamente no celular, tablet ou computador, no seu próprio ritmo.</p>
+                </div>
+              </details>
+
+              <!-- Pergunta 6: Garantia e risco -->
+              <details class="faq-item">
+                <summary class="faq-question">
+                  <span>6. E se eu aplicar o método e não encontrar nada ou achar que não é para mim?</span>
+                  <span class="faq-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </span>
+                </summary>
+                <div class="faq-answer">
+                  <p><strong>O risco é 100% nosso.</strong> Você tem <strong>7 dias de garantia incondicional</strong>. Você pode acessar todo o método, baixar os modelos de árvore genealógica e os checklists. Se por qualquer motivo achar que não valeu a pena, basta nos enviar um e-mail e devolveremos 100% do valor pago, sem perguntas e sem complicações.</p>
+                </div>
+              </details>
+
+              <!-- Pergunta 7: Mensalidade vs pagamento único -->
+              <details class="faq-item">
+                <summary class="faq-question">
+                  <span>7. É uma assinatura ou pagamento único? Terei acesso por quanto tempo?</span>
+                  <span class="faq-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </span>
+                </summary>
+                <div class="faq-answer">
+                  <p><strong>É pagamento único de apenas R$ 37,90.</strong> Não existe nenhuma assinatura recorrente, mensalidade ou cobrança surpresa futura. O seu acesso é <strong>vitalício</strong>, incluindo todas as atualizações e melhorias futuras do material.</p>
+                </div>
+              </details>
+
+              <!-- Pergunta 8: Segurança do pagamento -->
+              <details class="faq-item">
+                <summary class="faq-question">
+                  <span>8. O pagamento é realmente seguro?</span>
+                  <span class="faq-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </span>
+                </summary>
+                <div class="faq-answer">
+                  <p><strong>Sim, 100% seguro e protegido.</strong> O pagamento é intermediado por uma das maiores plataformas de checkout do Brasil com criptografia militar de ponta a ponta (SSL 256 bits). Seus dados financeiros não ficam armazenados e a compra é totalmente sigilosa.</p>
+                </div>
+              </details>
             </div>
           </div>
 
@@ -1697,6 +1968,20 @@
   // Intervalo mais longo e natural (primeiro aos 8s, depois a cada 24s)
   setTimeout(showToast, 8000);
   setInterval(showToast, 24000);
+
+  // ── FAQ Accordion Toggle Behavior (fecha os outros ao abrir) ──
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach((item) => {
+    item.addEventListener('toggle', () => {
+      if (item.open) {
+        faqItems.forEach((other) => {
+          if (other !== item && other.open) {
+            other.removeAttribute('open');
+          }
+        });
+      }
+    });
+  });
   </script>
 
 </body>
