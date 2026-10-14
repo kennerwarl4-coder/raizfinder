@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout Seguro | RaizFinder – Acesso Imediato</title>
+  <meta name="description" content="Finalize seu pedido com segurança e receba acesso imediato ao Método Completo RaizFinder via PIX."/>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <!-- Local QR Code and Confetti libraries for zero-dependency reliability -->
+  <script src="assets/qrcode.min.js"></script>
+  <script src="assets/confetti.min.js"></script>
+
+  <style>
+    /* ─── RESET & CSS VARIABLES ─── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #08080F;
+      --card-bg: #10101E;
+      --card-subtle: #14142A;
+      --card-elevated: #171730;
+      --card-border: rgba(255, 255, 255, 0.08);
+      
+      --green: #00E676;
+      --green-dark: #00A844;
+      --green-glow: rgba(0, 230, 118, 0.35);
+      --green-light: rgba(0, 230, 118, 0.12);
+      --green-border: rgba(0, 230, 118, 0.3);
+      
+      --gold: #F5C518;
+      --gold-light: rgba(245, 197, 24, 0.12);
+      --red: #FF3B30;
+      --red-light: rgba(255, 59, 48, 0.12);
+      
+      --text-main: #FFFFFF;
+      --text-muted: rgba(255, 255, 255, 0.72);
+      --text-light: rgba(255, 255, 255, 0.45);
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+      --shadow-btn: 0 6px 26px rgba(0, 230, 118, 0.45);
+    }
+
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 230, 118, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(245, 197, 24, 0.03) 0px, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* ─── FAIXA COM TIMER DE OFERTA LIMITADA (TOPO) ─── */
+    .top-urgency-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: #ee9800;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+      padding: 9px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: #08080F;
+      box-shadow: 0 4px 18px rgba(238, 152, 0, 0.35);
+    }
+
+    .urgency-badge {
+      display: inline-flex;
+      align-items: center;
+      font-weight: 800;
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #08080F;
+    }
+
+    .timer-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(8, 8, 15, 0.9);
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      color: #FFFFFF;
+      font-size: 0.88rem;
+      letter-spacing: 0.05em;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ─── WRAPPER PRINCIPAL ─── */
+    .checkout-wrap {
+      min-height: calc(100vh - 45px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 14px 64px;
+    }
+
+    .checkout-container {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    /* ─── BRAND HEADER ─── */
+    .brand-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 4px 18px;
+    }
+
+    .brand-logo-img {
+      height: 44px;
+      width: auto;
+      display: block;
+    }
+
+    .safe-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.74rem;
+      color: var(--text-light);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 6px 10px;
+      border-radius: 100px;
+      border: 1px solid var(--card-border);
+    }
+
+    .safe-badge svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--green);
+    }
+
+    /* ─── CARDS GERAIS ─── */
+    .c-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    /* ─── RESUMO DO PEDIDO (MINIMALISTA) ─── */
+    .summary-card {
+      border-color: rgba(255, 255, 255, 0.1);
+      padding: 14px 16px;
+    }
+
+    .summary-mini-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .summary-mini-product {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .product-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .product-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-info-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .product-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      line-height: 1.3;
+      color: #FFFFFF;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-badge-sub {
+      display: inline-block;
+      font-size: 0.7rem;
+      color: var(--green);
+      background: var(--green-light);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .summary-mini-pricing {
+      text-align: right;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1px;
+    }
+
+    .summary-old-price {
+      font-size: 0.74rem;
+      color: var(--text-light);
+      text-decoration: line-through;
+    }
+
+    .summary-price-hero {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--green);
+      letter-spacing: -0.01em;
+    }
+
+    /* ─── SEÇÃO DE FORMULÁRIO ─── */
+    .section-header-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--card-border);
+      background: var(--card-subtle);
+    }
+
+    .step-number {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #06080F;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--text-main);
+    }
+
+    .form-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+
+    .input-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .input-field-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 13px;
+      width: 17px;
+      height: 17px;
+      stroke: var(--text-light);
+      pointer-events: none;
+      transition: stroke 0.2s ease;
+    }
+
+    .input-field {
+      width: 100%;
+      background: #0B0B14;
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 13px 38px 13px 40px;
+      color: #FFFFFF;
+      font-size: 0.92rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .input-field::placeholder {
+      color: rgba(255, 255, 255, 0.28);
+    }
+
+    .input-field:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.18);
+    }
+
+    .input-field:focus + .input-icon,
+    .input-field-wrap:focus-within .input-icon {
+      stroke: var(--green);
+    }
+
+    .input-field.error {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.18);
+    }
+
+    .input-field.valid {
+      border-color: rgba(0, 230, 118, 0.5);
+    }
+
+    .input-status-icon {
+      position: absolute;
+      right: 12px;
+      width: 18px;
+      height: 18px;
+      pointer-events: none;
+      display: none;
+    }
+
+    .input-field.valid ~ .input-status-icon.valid-icon {
+      display: block;
+      stroke: var(--green);
+    }
+
+    .input-field.error ~ .input-status-icon.error-icon {
+      display: block;
+      stroke: var(--red);
+    }
+
+    .input-error-msg {
+      font-size: 0.72rem;
+      color: var(--red);
+      font-weight: 500;
+      display: none;
+      margin-top: 2px;
+    }
+
+    .input-error-msg.visible {
+      display: block;
+    }
+
+    .input-helper-note {
+      font-size: 0.72rem;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .input-helper-note svg {
+      width: 12px;
+      height: 12px;
+      stroke: var(--text-light);
+      flex-shrink: 0;
+    }
+
+    /* ─── CARD DE PIX (MINIMALISTA) ─── */
+    .pix-card {
+      border: 1.5px solid var(--green);
+      background: linear-gradient(180deg, rgba(0, 230, 118, 0.08) 0%, rgba(16, 16, 30, 0.95) 100%);
+      box-shadow: 0 4px 24px rgba(0, 230, 118, 0.15);
+      position: relative;
+    }
+
+    .pix-card-header {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pix-brand-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .pix-brand-logo-img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      flex-shrink: 0;
+      filter: drop-shadow(0 2px 8px rgba(50, 188, 173, 0.35));
+    }
+
+    .pix-name-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pix-brand-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pix-instant-pill {
+      font-size: 0.68rem;
+      background: var(--green);
+      color: #06080F;
+      padding: 2px 7px;
+      border-radius: 100px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .pix-radio-active {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px var(--green-glow);
+    }
+
+    .pix-radio-active svg {
+      width: 14px;
+      height: 14px;
+      stroke: #06080F;
+      stroke-width: 3;
+    }
+
+    /* ─── BOTÃO DE GERAR PIX ─── */
+    .btn-pix-generate {
+      width: 100%;
+      background: linear-gradient(135deg, #00E676 0%, #00B04B 100%);
+      color: #FFFFFF;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.05rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      padding: 18px 22px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: var(--shadow-btn);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .btn-pix-generate svg {
+      stroke: #FFFFFF;
+    }
+
+    .btn-pix-generate:hover:not(:disabled) {
+      background: linear-gradient(135deg, #10FF85 0%, #00C853 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 230, 118, 0.55);
+    }
+
+    .btn-pix-generate:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-pix-generate:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      filter: grayscale(0.2);
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 4px 20px rgba(0, 230, 118, 0.4); }
+      50% { box-shadow: 0 6px 30px rgba(0, 230, 118, 0.7); }
+    }
+
+    .btn-pix-generate:not(:disabled) {
+      animation: pulseGlow 2.5s infinite;
+    }
+
+    .btn-spinner {
+      width: 22px;
+      height: 22px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #FFFFFF;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .btn-pix-generate.loading .btn-spinner {
+      display: inline-block;
+    }
+
+    .btn-pix-generate.loading .btn-text-content {
+      opacity: 0.8;
+    }
+
+    /* ─── SECURITY FOOTER IN CTA ─── */
+    .cta-security-notes {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 0.72rem;
+      color: var(--text-light);
+      margin-top: 12px;
+      text-align: center;
+      flex-wrap: wrap;
+    }
+
+    .sec-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sec-item svg {
+      width: 13px;
+      height: 13px;
+      stroke: var(--text-light);
+    }
+
+    /* ─── TELA / ÁREA DO PIX GERADO ─── */
+    .pix-generated-card {
+      display: none;
+      animation: fadeInScale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border-color: var(--green);
+    }
+
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .pix-head-alert {
+      background: linear-gradient(90deg, rgba(0, 230, 118, 0.15) 0%, rgba(0, 168, 68, 0.1) 100%);
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--green-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pix-head-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .radar-pulse-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+      animation: radarPulse 1.8s infinite ease-out;
+    }
+
+    @keyframes radarPulse {
+      0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7); }
+      70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(0, 230, 118, 0); }
+      100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0); }
+    }
+
+    .pix-waiting-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.86rem;
+      color: #FFFFFF;
+    }
+
+    .pix-expires-pill {
+      font-size: 0.74rem;
+      color: #FFD54F;
+      background: rgba(245, 197, 24, 0.12);
+      border: 1px solid rgba(245, 197, 24, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .pix-qr-container {
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .qr-frame {
+      background: #FFFFFF;
+      padding: 14px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+      margin-bottom: 16px;
+      display: inline-block;
+      border: 3px solid #FFFFFF;
+    }
+
+    .qr-frame canvas, .qr-frame img {
+      display: block;
+      width: 210px !important;
+      height: 210px !important;
+    }
+
+    .pix-amount-badge {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .pix-amount-badge strong {
+      color: var(--green);
+      font-size: 1.35rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      margin-left: 4px;
+    }
+
+    .pix-copia-cola-box {
+      width: 100%;
+      margin-top: 14px;
+    }
+
+    .pix-code-preview {
+      width: 100%;
+      background: #06080F;
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text-light);
+      font-family: monospace;
+      font-size: 0.74rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 10px;
+      user-select: all;
+    }
+
+    .btn-copy-pix {
+      width: 100%;
+      background: linear-gradient(135deg, #00E676 0%, #009638 100%);
+      color: #06080F;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 15px 18px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 18px rgba(0, 230, 118, 0.4);
+    }
+
+    .btn-copy-pix:hover {
+      background: linear-gradient(135deg, #10FF85 0%, #00C853 100%);
+      transform: translateY(-1px);
+    }
+
+    .btn-copy-pix svg {
+      width: 18px;
+      height: 18px;
+      stroke: #06080F;
+    }
+
+    .btn-copy-pix.copied {
+      background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+      color: #FFFFFF;
+      box-shadow: 0 4px 18px rgba(46, 125, 50, 0.5);
+    }
+
+    .btn-copy-pix.copied svg {
+      stroke: #FFFFFF;
+    }
+
+    .pix-instructions-card {
+      margin-top: 18px;
+      width: 100%;
+      background: var(--card-subtle);
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid var(--card-border);
+      text-align: left;
+    }
+
+    .inst-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .inst-steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.77rem;
+      color: var(--text-muted);
+    }
+
+    .inst-step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.35;
+    }
+
+    .inst-step-num {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      color: var(--green);
+      font-size: 0.68rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ─── TELA DE SUCESSO DO PAGAMENTO ─── */
+    .success-card {
+      display: none;
+      text-align: center;
+      padding: 32px 20px;
+      animation: fadeInScale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border-color: var(--green);
+      background: linear-gradient(180deg, rgba(0, 230, 118, 0.12) 0%, #10101E 100%);
+    }
+
+    .success-icon-wrap {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00E676, #00A844);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      box-shadow: 0 10px 32px rgba(0, 230, 118, 0.5);
+    }
+
+    .success-icon-wrap svg {
+      width: 42px;
+      height: 42px;
+      stroke: #06080F;
+      stroke-width: 2.8;
+    }
+
+    .success-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.45rem;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+    }
+
+    .success-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 22px;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .success-user-email {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .success-info-box {
+      background: var(--card-subtle);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .success-info-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .success-info-line:last-child {
+      margin-bottom: 0;
+    }
+
+    .btn-access-now {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: linear-gradient(135deg, #00E676 0%, #00B04B 100%);
+      color: #06080F;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.05rem;
+      padding: 18px 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: var(--shadow-btn);
+      transition: all 0.2s ease;
+    }
+
+    .btn-access-now:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 230, 118, 0.6);
+    }
+
+
+    /* ─── TOAST NOTIFICATION ─── */
+    .live-toast {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      z-index: 1002;
+      background: rgba(16, 16, 30, 0.95);
+      border: 1px solid var(--green-border);
+      backdrop-filter: blur(10px);
+      border-radius: 100px;
+      padding: 8px 18px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.76rem;
+      color: #FFFFFF;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+      max-width: 90vw;
+    }
+
+    .live-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .live-toast-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      flex-shrink: 0;
+    }
+
+    /* ─── FOOTER ─── */
+    .checkout-footer {
+      text-align: center;
+      padding: 24px 0 10px;
+      font-size: 0.72rem;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    .checkout-footer a {
+      color: var(--text-muted);
+      text-decoration: underline;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 480px) {
+      .checkout-wrap { padding: 12px 10px 48px; }
+      .top-urgency-bar { font-size: 0.74rem; padding: 8px 8px; }
+      .timer-wrap { font-size: 0.8rem; padding: 2px 6px; }
+      .brand-header { padding: 8px 2px 14px; }
+      .brand-logo-img { height: 38px; }
+      .summary-card { padding: 12px 12px; }
+      .product-thumb { width: 44px; height: 44px; }
+      .product-title { font-size: 0.82rem; }
+      .summary-price-hero { font-size: 1.15rem; }
+      .pix-brand-logo-img { width: 46px; height: 46px; }
+      .btn-pix-generate { font-size: 0.96rem; padding: 16px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════
+       1. FAIXA NO TOPO COM TIMER DE OFERTA LIMITADA
+  ══════════════════════════════════════════════════════════ -->
+  <header class="top-urgency-bar">
+    <div class="urgency-badge">
+      <span>DESCONTO DE 77% RESERVADO POR:</span>
+    </div>
+    <div class="timer-wrap" id="top-timer">
+      <span id="cd-minutes">09</span>:<span id="cd-seconds">59</span>
+    </div>
+  </header>
+
+  <div class="checkout-wrap">
+    <div class="checkout-container">
+
+      <!-- BRAND HEADER -->
+      <div class="brand-header">
+        <a href="index.html" title="Voltar para a página inicial">
+          <picture>
+            <source srcset="assets/logo-raizfinder.webp" type="image/webp"/>
+            <img src="assets/logo-raizfinder.png" alt="RaizFinder" class="brand-logo-img" width="131" height="56"/>
+          </picture>
+        </a>
+        <div class="safe-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Checkout 100% Seguro
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           2. RESUMO DO PEDIDO (MINIMALISTA)
+      ══════════════════════════════════════════════════════════ -->
+      <div class="c-card summary-card" id="order-summary-card">
+        <div class="summary-mini-container">
+          <div class="summary-mini-product">
+            <div class="product-thumb">
+              <picture>
+                <source srcset="assets/raizfinder_descubra_suas_raizes_refeita.webp" type="image/webp"/>
+                <img src="assets/raizfinder_descubra_suas_raizes_refeita.png" alt="Método RaizFinder"/>
+              </picture>
+            </div>
+            <div class="product-info-wrap">
+              <h3 class="product-title">RaizFinder – Método Completo</h3>
+              <span class="product-badge-sub">Acesso Imediato</span>
+            </div>
+          </div>
+          <div class="summary-mini-pricing">
+            <span class="summary-old-price">R$ 167,90</span>
+            <span class="summary-price-hero">R$ 37,90</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIO DE CHECKOUT & PIX CONTAINER -->
+      <div id="checkout-form-container">
+        
+        <!-- ══════════════════════════════════════════════════════════
+             3. CAMPOS: NOME, EMAIL, CPF E TELEFONE
+        ══════════════════════════════════════════════════════════ -->
+        <div class="c-card">
+          <div class="section-header-step">
+            <div class="step-number">1</div>
+            <h2 class="step-title">Dados Pessoais do Titular</h2>
+          </div>
+
+          <div class="form-body">
+            <!-- NOME COMPLETO -->
+            <div class="input-group">
+              <label for="lead-name" class="input-label">Nome Completo</label>
+              <div class="input-field-wrap">
+                <input type="text" id="lead-name" class="input-field" placeholder="ex: João Carlos da Silva" autocomplete="name" required/>
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <!-- Status Icons -->
+                <svg class="input-status-icon valid-icon" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg class="input-status-icon error-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </div>
+              <span class="input-error-msg" id="err-name">Informe seu nome completo (mínimo 2 palavras).</span>
+            </div>
+
+            <!-- E-MAIL -->
+            <div class="input-group">
+              <label for="lead-email" class="input-label">E-mail para Receber o Acesso</label>
+              <div class="input-field-wrap">
+                <input type="email" id="lead-email" class="input-field" placeholder="ex: seuemail@gmail.com" autocomplete="email" required/>
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                <svg class="input-status-icon valid-icon" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg class="input-status-icon error-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </div>
+              <div class="input-helper-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                O login e materiais serão enviados imediatamente a este e-mail.
+              </div>
+              <span class="input-error-msg" id="err-email">Informe um endereço de e-mail válido.</span>
+            </div>
+
+            <!-- CPF -->
+            <div class="input-group">
+              <label for="lead-cpf" class="input-label">CPF</label>
+              <div class="input-field-wrap">
+                <input type="text" id="lead-cpf" class="input-field" placeholder="000.000.000-00" maxlength="14" inputmode="numeric" required/>
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/>
+                  <path d="M7 15h0M2 10h20"/>
+                </svg>
+                <svg class="input-status-icon valid-icon" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg class="input-status-icon error-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </div>
+              <span class="input-error-msg" id="err-cpf">Informe um CPF válido com 11 dígitos.</span>
+            </div>
+
+            <!-- TELEFONE / WHATSAPP -->
+            <div class="input-group">
+              <label for="lead-phone" class="input-label">WhatsApp / Telefone</label>
+              <div class="input-field-wrap">
+                <input type="tel" id="lead-phone" class="input-field" placeholder="(11) 99999-9999" maxlength="15" inputmode="tel" required/>
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+                <svg class="input-status-icon valid-icon" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg class="input-status-icon error-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </div>
+              <span class="input-error-msg" id="err-phone">Informe um número com DDD válido.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════════
+             4. CARD DE PIX
+        ══════════════════════════════════════════════════════════ -->
+        <div class="c-card pix-card">
+          <div class="pix-card-header">
+            <div class="pix-brand-box">
+              <img src="assets/logo-pix-1024.webp" alt="Pix" class="pix-brand-logo-img"/>
+              <div class="pix-name-group">
+                <span class="pix-brand-name">
+                  PIX
+                  <span class="pix-instant-pill">Aprovação Imediata</span>
+                </span>
+              </div>
+            </div>
+            <div class="pix-radio-active">
+              <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════════
+             5. BOTÃO PARA GERAR PIX
+        ══════════════════════════════════════════════════════════ -->
+        <button type="button" id="btn-generate-pix" class="btn-pix-generate">
+          <div class="btn-spinner"></div>
+          <span class="btn-text-content">GERAR CÓDIGO PIX — R$ 37,90</span>
+          <svg class="btn-arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+
+        <div class="cta-security-notes">
+          <span class="sec-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            SSL 256 Bits
+          </span>
+          <span>•</span>
+          <span class="sec-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Acesso Imediato
+          </span>
+        </div>
+
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           6. ÁREA DINÂMICA DO PIX GERADO (QR CODE + COPIA E COLA)
+      ══════════════════════════════════════════════════════════ -->
+      <div class="c-card pix-generated-card" id="pix-display-card">
+        
+        <div class="pix-head-alert">
+          <div class="pix-head-left">
+            <span class="radar-pulse-dot"></span>
+            <span class="pix-waiting-title">Aguardando Pagamento</span>
+          </div>
+          <div class="pix-expires-pill">
+            Expira em: <span id="pix-timer-countdown">15:00</span>
+          </div>
+        </div>
+
+        <div class="pix-qr-container">
+          <div class="pix-amount-badge">
+            Valor a pagar: <strong>R$ 37,90</strong>
+          </div>
+
+          <div class="qr-frame" id="qr-code-box">
+            <!-- QR code gerado pelo qrcode.min.js -->
+          </div>
+
+          <div class="pix-copia-cola-box">
+            <div class="pix-code-preview" id="pix-code-text" title="Clique no botão abaixo para copiar">
+              Carregando código...
+            </div>
+
+            <button type="button" class="btn-copy-pix" id="btn-copy-pix-code">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span id="copy-btn-text">COPIAR CÓDIGO PIX</span>
+            </button>
+          </div>
+
+          <div class="pix-instructions-card">
+            <div class="inst-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Como pagar seu Pix:
+            </div>
+            <ul class="inst-steps">
+              <li class="inst-step-item">
+                <span class="inst-step-num">1</span>
+                <span>Abra o app do seu banco no smartphone e vá na seção <strong>Pix</strong>.</span>
+              </li>
+              <li class="inst-step-item">
+                <span class="inst-step-num">2</span>
+                <span>Escolha <strong>Pix Copia e Cola</strong> (ou aponte a câmera para o QR Code acima).</span>
+              </li>
+              <li class="inst-step-item">
+                <span class="inst-step-num">3</span>
+                <span>Cole o código copiado, confirme o valor de <strong>R$ 37,90</strong> e conclua.</span>
+              </li>
+              <li class="inst-step-item">
+                <span class="inst-step-num">4</span>
+                <span>Assim que concluir, esta tela será atualizada <strong>automaticamente</strong> em poucos segundos!</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           7. TELA DE SUCESSO (APÓS CONFIRMAÇÃO DO PIX)
+      ══════════════════════════════════════════════════════════ -->
+      <div class="c-card success-card" id="success-screen-card">
+        <div class="success-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+
+        <h2 class="success-title">Pagamento Confirmado!</h2>
+        <p class="success-subtitle">
+          Parabéns! Seu acesso vitalício ao <strong>RaizFinder</strong> foi liberado com sucesso. Enviamos os links e dados de acesso para o e-mail: <br>
+          <span class="success-user-email" id="success-email-target">seu e-mail</span>
+        </p>
+
+        <div class="success-info-box">
+          <div class="success-info-line">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Transação aprovada e registrada via Sync Pay</span>
+          </div>
+          <div class="success-info-line">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Acesso liberado a todas as 6 Técnicas e Bônus</span>
+          </div>
+        </div>
+
+        <a href="index.html#oferta" class="btn-access-now" id="btn-start-access">
+          ACESSAR MEU MATERIAL AGORA
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="checkout-footer">
+        <p>© 2024 RaizFinder. Todos os direitos reservados.</p>
+        <p>Pagamento intermediado de forma segura pela tecnologia Sync Pay.</p>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- FLOATING PURCHASE TOAST -->
+  <div class="live-toast" id="live-toast">
+    <span class="live-toast-dot"></span>
+    <span id="toast-buyer-text"><strong>Carlos R.</strong> acabou de adquirir via Pix</span>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       JAVASCRIPT: MÁSCARAS, VALIDAÇÕES, PIX SYNC PAY & STATUS
+  ══════════════════════════════════════════════════════════ -->
+  <script>
+    // ── 1. TIMER DE OFERTA LIMITADA NO TOPO (09:59) ──
+    (function initUrgencyTimer() {
+      const KEY = 'rf_checkout_cd_v1';
+      let end = parseInt(sessionStorage.getItem(KEY), 10);
+      if (!end || end < Date.now()) {
+        end = Date.now() + (9 * 60 + 59) * 1000;
+        sessionStorage.setItem(KEY, end);
+      }
+
+      const minEl = document.getElementById('cd-minutes');
+      const secEl = document.getElementById('cd-seconds');
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+
+      function tick() {
+        const diff = Math.max(0, end - Date.now());
+        if (minEl && secEl) {
+          minEl.textContent = pad(Math.floor(diff / 60000));
+          secEl.textContent = pad(Math.floor((diff % 60000) / 1000));
+        }
+        if (diff > 0) setTimeout(tick, 1000);
+      }
+      tick();
+    })();
+
+    // ── 2. RESUMO DO PEDIDO ──
+    const summaryCard = document.getElementById('order-summary-card');
+    const summaryToggleBtn = document.getElementById('summary-toggle-btn');
+    const toggleLabelText = document.getElementById('toggle-label-text');
+
+    if (summaryToggleBtn && summaryCard && toggleLabelText) {
+      summaryToggleBtn.addEventListener('click', () => {
+        const isCollapsed = summaryCard.classList.toggle('collapsed');
+        toggleLabelText.textContent = isCollapsed ? 'Ver detalhes' : 'Ocultar detalhes';
+        summaryToggleBtn.setAttribute('aria-expanded', !isCollapsed);
+      });
+    }
+
+    // ── 3. MÁSCARAS E VALIDAÇÃO DE CAMPOS ──
+    const nameInput = document.getElementById('lead-name');
+    const emailInput = document.getElementById('lead-email');
+    const cpfInput = document.getElementById('lead-cpf');
+    const phoneInput = document.getElementById('lead-phone');
+
+    // Máscara de CPF: 000.000.000-00
+    cpfInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '').slice(0, 11);
+      if (val.length > 9) {
+        val = val.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+      } else if (val.length > 6) {
+        val = val.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+      } else if (val.length > 3) {
+        val = val.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+      }
+      e.target.value = val;
+      validateCpfField(false);
+    });
+
+    // Máscara de Telefone: (00) 00000-0000
+    phoneInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '').slice(0, 11);
+      if (val.length > 10) {
+        val = val.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+      } else if (val.length > 6) {
+        val = val.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+      } else if (val.length > 2) {
+        val = val.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+      } else if (val.length > 0) {
+        val = val.replace(/(\d{0,2})/, '($1');
+      }
+      e.target.value = val;
+      validatePhoneField(false);
+    });
+
+    nameInput.addEventListener('blur', () => validateNameField(true));
+    emailInput.addEventListener('blur', () => validateEmailField(true));
+    cpfInput.addEventListener('blur', () => validateCpfField(true));
+    phoneInput.addEventListener('blur', () => validatePhoneField(true));
+
+    function setFieldState(input, errId, isValid, showErr) {
+      const errEl = document.getElementById(errId);
+      if (isValid) {
+        input.classList.remove('error');
+        input.classList.add('valid');
+        if (errEl) errEl.classList.remove('visible');
+      } else {
+        input.classList.remove('valid');
+        if (showErr) {
+          input.classList.add('error');
+          if (errEl) errEl.classList.add('visible');
+        } else {
+          input.classList.remove('error');
+          if (errEl) errEl.classList.remove('visible');
+        }
+      }
+      return isValid;
+    }
+
+    function validateNameField(showErr) {
+      const val = nameInput.value.trim();
+      const isValid = val.length >= 3 && val.includes(' ');
+      return setFieldState(nameInput, 'err-name', isValid, showErr);
+    }
+
+    function validateEmailField(showErr) {
+      const val = emailInput.value.trim();
+      const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+      return setFieldState(emailInput, 'err-email', isValid, showErr);
+    }
+
+    // Validador matemático de dígitos verificadores de CPF
+    function isValidCPFNumber(cpf) {
+      const clean = cpf.replace(/\D/g, '');
+      if (clean.length !== 11 || /^(\d)\1{10}$/.test(clean)) return false;
+      let sum = 0, rest;
+      for (let i = 1; i <= 9; i++) sum += parseInt(clean.substring(i - 1, i)) * (11 - i);
+      rest = (sum * 10) % 11;
+      if (rest === 10 || rest === 11) rest = 0;
+      if (rest !== parseInt(clean.substring(9, 10))) return false;
+      sum = 0;
+      for (let i = 1; i <= 10; i++) sum += parseInt(clean.substring(i - 1, i)) * (12 - i);
+      rest = (sum * 10) % 11;
+      if (rest === 10 || rest === 11) rest = 0;
+      return rest === parseInt(clean.substring(10, 11));
+    }
+
+    function validateCpfField(showErr) {
+      const val = cpfInput.value;
+      const isValid = isValidCPFNumber(val);
+      return setFieldState(cpfInput, 'err-cpf', isValid, showErr);
+    }
+
+    function validatePhoneField(showErr) {
+      const clean = phoneInput.value.replace(/\D/g, '');
+      const isValid = clean.length >= 10 && clean.length <= 11;
+      return setFieldState(phoneInput, 'err-phone', isValid, showErr);
+    }
+
+    // ── 4. INTEGRAÇÃO COM SYNC PAY API (GERAÇÃO PIX E STATUS) ──
+    const btnGeneratePix = document.getElementById('btn-generate-pix');
+    const checkoutFormContainer = document.getElementById('checkout-form-container');
+    const pixDisplayCard = document.getElementById('pix-display-card');
+    const qrCodeBox = document.getElementById('qr-code-box');
+    const pixCodeText = document.getElementById('pix-code-text');
+    const btnCopyPixCode = document.getElementById('btn-copy-pix-code');
+    const copyBtnText = document.getElementById('copy-btn-text');
+    const successScreenCard = document.getElementById('success-screen-card');
+    const successEmailTarget = document.getElementById('success-email-target');
+
+    let currentTransactionIdentifier = null;
+    let statusCheckInterval = null;
+    let currentPixCode = '';
+
+    btnGeneratePix.addEventListener('click', async () => {
+      // Validação total antes do envio
+      const isNameOk = validateNameField(true);
+      const isEmailOk = validateEmailField(true);
+      const isCpfOk = validateCpfField(true);
+      const isPhoneOk = validatePhoneField(true);
+
+      if (!isNameOk || !isEmailOk || !isCpfOk || !isPhoneOk) {
+        // Encontra o primeiro campo com erro para focar
+        const firstError = document.querySelector('.input-field.error');
+        if (firstError) {
+          firstError.focus();
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+
+      // Inicia estado de loading
+      btnGeneratePix.disabled = true;
+      btnGeneratePix.classList.add('loading');
+      const originalText = btnGeneratePix.querySelector('.btn-text-content').textContent;
+      btnGeneratePix.querySelector('.btn-text-content').textContent = 'GERANDO PIX EXCLUSIVO...';
+
+      try {
+        const payload = {
+          name: nameInput.value.trim(),
+          email: emailInput.value.trim().toLowerCase(),
+          cpf: cpfInput.value.replace(/\D/g, ''),
+          phone: phoneInput.value.replace(/\D/g, '')
+        };
+
+        const response = await fetch('/api/create-pix', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok || !data?.success) {
+          throw new Error(data?.message || 'Falha ao gerar cobrança Pix. Verifique os dados e tente novamente.');
+        }
+
+        // Sucesso na geração do Pix via Sync Pay
+        currentPixCode = data.pix_code;
+        currentTransactionIdentifier = data.identifier;
+
+        // Renderiza o QR Code
+        renderPixQRCode(data.pix_code);
+
+        // Preenche o código Copia e Cola
+        pixCodeText.textContent = data.pix_code;
+
+        // Oculta o formulário e exibe o card do Pix
+        checkoutFormContainer.style.display = 'none';
+        pixDisplayCard.style.display = 'block';
+        pixDisplayCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Inicia o timer de expiração do Pix (15 minutos)
+        startPixExpiryTimer(15 * 60);
+
+        // Inicia verificação automática do status do Pix a cada 3.5 segundos
+        startTransactionStatusPolling(data.identifier);
+
+      } catch (err) {
+        alert(err.message || 'Erro ao comunicar com o servidor de pagamento. Tente novamente.');
+      } finally {
+        btnGeneratePix.disabled = false;
+        btnGeneratePix.classList.remove('loading');
+        btnGeneratePix.querySelector('.btn-text-content').textContent = originalText;
+      }
+    });
+
+    // Renderizador de QR Code via QRCode.js local
+    function renderPixQRCode(code) {
+      qrCodeBox.innerHTML = '';
+      if (typeof QRCode !== 'undefined') {
+        new QRCode(qrCodeBox, {
+          text: code,
+          width: 210,
+          height: 210,
+          colorDark: '#000000',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      } else {
+        // Fallback elegante se a lib local não carregar
+        qrCodeBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=210x210&data=${encodeURIComponent(code)}" alt="QR Code Pix" width="210" height="210"/>`;
+      }
+    }
+
+    // Copiar Chave Pix com 1 clique e feedback visual
+    btnCopyPixCode.addEventListener('click', async () => {
+      if (!currentPixCode) return;
+      try {
+        await navigator.clipboard.writeText(currentPixCode);
+        btnCopyPixCode.classList.add('copied');
+        copyBtnText.textContent = 'CÓDIGO PIX COPIADO!';
+        
+        setTimeout(() => {
+          btnCopyPixCode.classList.remove('copied');
+          copyBtnText.textContent = 'COPIAR CÓDIGO PIX';
+        }, 3500);
+      } catch (err) {
+        // Fallback para seleção manual
+        const textArea = document.createElement('textarea');
+        textArea.value = currentPixCode;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        btnCopyPixCode.classList.add('copied');
+        copyBtnText.textContent = 'CÓDIGO PIX COPIADO!';
+        setTimeout(() => {
+          btnCopyPixCode.classList.remove('copied');
+          copyBtnText.textContent = 'COPIAR CÓDIGO PIX';
+        }, 3500);
+      }
+    });
+
+    // ── 5. POLLING DE STATUS DA TRANSAÇÃO SYNC PAY ──
+    function startTransactionStatusPolling(identifier) {
+      if (statusCheckInterval) clearInterval(statusCheckInterval);
+
+      // Consulta a cada 3.5 segundos
+      statusCheckInterval = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/check-pix?identifier=${encodeURIComponent(identifier)}`);
+          const result = await res.json().catch(() => null);
+
+          if (result && result.success) {
+            const txData = result.data;
+            const status = txData?.status;
+
+            if (status === 'completed' || status === 'paid') {
+              clearInterval(statusCheckInterval);
+              onPaymentSuccess();
+            } else if (status === 'failed') {
+              clearInterval(statusCheckInterval);
+              alert('A transação expirou ou não pôde ser completada. Por favor, gere um novo código Pix.');
+            }
+          }
+        } catch (e) {
+          console.warn('Verificação de status em andamento...', e);
+        }
+      }, 3500);
+    }
+
+    // Evento disparado quando o Pix for pago
+    function onPaymentSuccess() {
+      // Dispara confetes comemorativos
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+        setTimeout(() => {
+          confetti({
+            particleCount: 80,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 }
+          });
+          confetti({
+            particleCount: 80,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 }
+          });
+        }, 300);
+      }
+
+      // Transiciona telas
+      pixDisplayCard.style.display = 'none';
+      successEmailTarget.textContent = emailInput.value.trim() || 'seu e-mail';
+      successScreenCard.style.display = 'block';
+      successScreenCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Timer de expiração do Pix (15 minutos)
+    function startPixExpiryTimer(durationSec) {
+      let timer = durationSec;
+      const display = document.getElementById('pix-timer-countdown');
+
+      const interval = setInterval(() => {
+        const minutes = parseInt(timer / 60, 10);
+        const seconds = parseInt(timer % 60, 10);
+
+        display.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+        if (--timer < 0) {
+          clearInterval(interval);
+          display.textContent = 'EXPIRADO';
+          if (statusCheckInterval) clearInterval(statusCheckInterval);
+        }
+      }, 1000);
+    }
+
+    // ── 6. NOTIFICAÇÕES FLUTUANTES DE PROVA SOCIAL ──
+    const buyerNames = [
+      'Lucas V.',
+      'Mariana L.',
+      'Carlos R.',
+      'Fernanda P.',
+      'André S.',
+      'Juliana M.',
+      'Rodrigo T.',
+      'Beatriz C.',
+      'Camila D.',
+      'Felipe M.'
+    ];
+
+    let toastIdx = 0;
+    const toastEl = document.getElementById('live-toast');
+    const toastText = document.getElementById('toast-buyer-text');
+
+    function triggerToast() {
+      if (!toastEl) return;
+      const name = buyerNames[toastIdx % buyerNames.length];
+      toastText.innerHTML = `<strong>${name}</strong> acabou de adquirir via Pix`;
+      toastEl.classList.add('show');
+      toastIdx++;
+      setTimeout(() => toastEl.classList.remove('show'), 4000);
+    }
+
+    setTimeout(triggerToast, 6000);
+    setInterval(triggerToast, 22000);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "raizfinder-checkout",
+  "version": "1.0.0",
+  "description": "Checkout de alta conversão RaizFinder com integração PIX Sync Pay",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "checkout",
+    "pix",
+    "syncpay",
+    "raizfinder"
+  ],
+  "author": "",
+  "license": "ISC"
+}
