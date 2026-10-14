@@ -4,12 +4,33 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
+// Load .env variables if present
+try {
+  const envPath = path.join(__dirname, '.env');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    envContent.split('\n').forEach(line => {
+      const match = line.match(/^\s*([\w_]+)\s*=\s*(.*)?\s*$/);
+      if (match && !line.trim().startsWith('#')) {
+        const key = match[1];
+        let val = match[2] || '';
+        if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
+        if (val.startsWith("'") && val.endsWith("'")) val = val.slice(1, -1);
+        process.env[key] = val.trim();
+      }
+    });
+  }
+} catch (e) {
+  console.warn('Não foi possível carregar arquivo .env:', e.message);
+}
+
 const PORT = process.env.PORT || 3000;
 
 // Load API handlers
 const createPixHandler = require('./api/create-pix');
 const checkPixHandler = require('./api/check-pix');
 const webhookHandler = require('./api/webhook');
+const metaPurchaseHandler = require('./api/meta-purchase');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=UTF-8',
@@ -65,6 +86,9 @@ const server = http.createServer((req, res) => {
   }
   if (pathname === '/api/webhook') {
     return readBody(() => webhookHandler(req, res));
+  }
+  if (pathname === '/api/meta-purchase') {
+    return readBody(() => metaPurchaseHandler(req, res));
   }
 
   // Routing for static files

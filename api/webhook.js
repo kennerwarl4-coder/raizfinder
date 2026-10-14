@@ -1,5 +1,6 @@
 // Webhook Handler for Sync Pay Cash-In Notifications
 // Note: Sync Pay requires all webhooks to respond within 5 seconds.
+const { sendMetaPurchaseEvent } = require('./meta-capi');
 
 module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') {
@@ -11,13 +12,33 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const payload = req.body;
+    let payload = req.body;
+    if (typeof payload === 'string') {
+      try { payload = JSON.parse(payload); } catch (e) {}
+    }
     console.log('[SYNC-PAY WEBHOOK RECEIVED]:', JSON.stringify(payload));
 
-    // Exemplos de eventos:
-    // status === 'completed', 'paid'
-    // identifier da transação
-    
+    const status = payload?.status || payload?.data?.status;
+    const identifier = payload?.identifier || payload?.data?.identifier || payload?.id;
+    const client = payload?.client || payload?.data?.client || {};
+    const amount = payload?.amount || payload?.data?.amount || 37.90;
+
+    // Se o pagamento foi concluído, envia o evento Purchase para a Meta CAPI com o token
+    if (status === 'completed' || status === 'paid') {
+      sendMetaPurchaseEvent({
+        eventId: identifier,
+        value: amount,
+        currency: 'BRL',
+        user: client,
+        req,
+        customData: {
+          webhook_received: true
+        }
+      }).catch(err => {
+        console.error('[WEBHOOK META CAPI TRIGGER ERROR]:', err);
+      });
+    }
+
     // Resposta imediata para respeitar o timeout de 5 segundos
     return res.status(200).json({
       received: true,

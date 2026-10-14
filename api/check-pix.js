@@ -1,4 +1,5 @@
 const { getTransaction } = require('./sync-client');
+const { sendMetaPurchaseEvent } = require('./meta-capi');
 
 function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -28,10 +29,30 @@ module.exports = async function handler(req, res) {
     }
 
     const result = await getTransaction(identifier);
+    const txData = result.data || result;
+    const status = txData?.status;
+
+    // Se a transação foi confirmada como paga, dispara evento Purchase no Meta Conversions API
+    if (status === 'completed' || status === 'paid') {
+      const client = txData?.client || {};
+      const amount = txData?.amount || 37.90;
+      sendMetaPurchaseEvent({
+        eventId: identifier,
+        value: amount,
+        currency: 'BRL',
+        user: client,
+        req,
+        customData: {
+          verified_via_status_polling: true
+        }
+      }).catch(err => {
+        console.error('[CHECK-PIX META CAPI TRIGGER ERROR]:', err);
+      });
+    }
 
     return res.status(200).json({
       success: true,
-      data: result.data || result
+      data: txData
     });
   } catch (error) {
     console.error('Erro ao verificar status do Pix:', error);

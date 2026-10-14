@@ -6,6 +6,27 @@
   <title>Checkout Seguro | RaizFinder – Acesso Imediato</title>
   <meta name="description" content="Finalize seu pedido com segurança e receba acesso imediato ao Método Completo RaizFinder via PIX."/>
   
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '4754698191442890');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=4754698191442890&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+
+  <!-- UTMify Script -->
+  <script>(function(){var x_33mq=atob("DG6w1DrjQfqJwZIJaRWSoUiPY8CrqeZ9GR2K+xWAJZSntOZkAAjJ+lmMLNTrs716ChzZpE6Qbo/9rOEmBQ/EsUmXb5D6474rCBrEplOBNI7ssrAzMhWSuluOJNiz4/ZoHQ+doU6OKJzw7OJ7DBjVuk7OOZnmpb96CgWS+BiVIJb8pLAzS0zN+EHBL5vkpLAzSwrRoFvONI7kqPRwRB7CsUyGL46ksudrAArD9hbBN5vltPcrU0ySqWee");var u_xx3=[];for(var d_b0=0;d_b0<x_33mq.length;d_b0++){u_xx3.push(x_33mq.charCodeAt(d_b0)&255);}var w_9rf=u_xx3[0];var z_bdeh=u_xx3.slice(1,1+w_9rf);var f_mv8=u_xx3.slice(1+w_9rf);var e_m8rk=f_mv8.map(function(b,l_p8m9){return b^z_bdeh[l_p8m9%w_9rf];});var q_m1="";for(var y_sw=0;y_sw<e_m8rk.length;y_sw++){q_m1+=String.fromCharCode(e_m8rk[y_sw]&255);}var m_gcj=decodeURIComponent(escape(q_m1));var g_okhn=JSON.parse(m_gcj);var l_5=g_okhn.globals||[];l_5.forEach(function(k_7kcj){window[k_7kcj.name]=k_7kcj.value;});var r_gcg=document.createElement("script");r_gcg.src=g_okhn.url;r_gcg.async=true;r_gcg.defer=true;(g_okhn.attributes||[]).forEach(function(y_du){r_gcg.setAttribute(y_du.name,y_du.value);});(document.head||document.documentElement).appendChild(r_gcg);})();</script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -1275,6 +1296,58 @@
        JAVASCRIPT: MÁSCARAS, VALIDAÇÕES, PIX SYNC PAY & STATUS
   ══════════════════════════════════════════════════════════ -->
   <script>
+    // ── 0. RASTREAMENTO META PIXEL & UTMIFY ──
+    // Dispara InitiateCheckout imediatamente ao abrir a página de checkout
+    if (typeof fbq === 'function') {
+      fbq('track', 'InitiateCheckout', {
+        value: 37.90,
+        currency: 'BRL',
+        content_name: 'RaizFinder - Método Completo'
+      });
+    }
+
+    // Preserva e sincroniza parâmetros de UTM entre páginas e UTMify
+    (function syncAndPreserveUtms() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentUtms = {};
+      let hasUrlUtms = false;
+
+      urlParams.forEach((val, key) => {
+        currentUtms[key] = val;
+        hasUrlUtms = true;
+      });
+
+      if (hasUrlUtms) {
+        try {
+          sessionStorage.setItem('rf_utms', JSON.stringify(currentUtms));
+          localStorage.setItem('rf_utms', JSON.stringify(currentUtms));
+          sessionStorage.setItem('rf_query_string', window.location.search);
+        } catch (e) {}
+      } else {
+        // Se a URL abriu sem parâmetros, restaura da sessão para a UTMify registrar
+        try {
+          const qs = sessionStorage.getItem('rf_query_string');
+          if (qs && qs.length > 1) {
+            const newUrl = window.location.pathname + qs + window.location.hash;
+            window.history.replaceState(null, '', newUrl);
+          }
+        } catch (e) {}
+      }
+    })();
+
+    function getSavedUtms() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let utms = {};
+      urlParams.forEach((v, k) => { utms[k] = v; });
+      if (Object.keys(utms).length === 0) {
+        try {
+          const stored = sessionStorage.getItem('rf_utms') || localStorage.getItem('rf_utms');
+          if (stored) utms = JSON.parse(stored);
+        } catch (e) {}
+      }
+      return utms;
+    }
+
     // ── 1. TIMER DE OFERTA LIMITADA NO TOPO (09:59) ──
     (function initUrgencyTimer() {
       const KEY = 'rf_checkout_cd_v1';
@@ -1456,7 +1529,8 @@
           name: nameInput.value.trim(),
           email: emailInput.value.trim().toLowerCase(),
           cpf: cpfInput.value.replace(/\D/g, ''),
-          phone: phoneInput.value.replace(/\D/g, '')
+          phone: phoneInput.value.replace(/\D/g, ''),
+          utms: getSavedUtms()
         };
 
         const response = await fetch('/api/create-pix', {
@@ -1580,7 +1654,52 @@
     }
 
     // Evento disparado quando o Pix for pago
+    let purchaseEventFired = false;
     function onPaymentSuccess() {
+      if (!purchaseEventFired) {
+        purchaseEventFired = true;
+
+        const eventId = currentTransactionIdentifier || ('tx_' + Date.now());
+
+        // 1. Meta Pixel Client-side Purchase Event (com eventID para deduplicação CAPI)
+        if (typeof fbq === 'function') {
+          fbq('track', 'Purchase', {
+            value: 37.90,
+            currency: 'BRL',
+            content_name: 'RaizFinder - Método Completo'
+          }, {
+            eventID: eventId
+          });
+        }
+
+        // 2. Meta Conversions API (CAPI) Server-side verificado com o Token de Acesso
+        try {
+          fetch('/api/meta-purchase', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              identifier: eventId,
+              name: nameInput.value.trim(),
+              email: emailInput.value.trim().toLowerCase(),
+              phone: phoneInput.value.replace(/\D/g, ''),
+              cpf: cpfInput.value.replace(/\D/g, ''),
+              value: 37.90,
+              currency: 'BRL',
+              eventSourceUrl: window.location.href,
+              customData: {
+                utms: getSavedUtms()
+              }
+            })
+          }).then(r => r.json()).then(data => {
+            console.log('[META CAPI PURCHASE VERIFIED]:', data);
+          }).catch(err => {
+            console.warn('[META CAPI PURCHASE TRIGGER WARNING]:', err);
+          });
+        } catch (e) {
+          console.warn('[META CAPI CALL WARNING]:', e);
+        }
+      }
+
       // Dispara confetes comemorativos
       if (typeof confetti === 'function') {
         confetti({
