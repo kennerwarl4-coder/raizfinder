@@ -16,6 +16,8 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
+  fbq.disablePushState = true;
+  fbq('set', 'autoConfig', false, '4754698191442890');
   fbq('init', '4754698191442890');
   fbq('track', 'PageView');
   </script>
@@ -1297,14 +1299,17 @@
   ══════════════════════════════════════════════════════════ -->
   <script>
     // ── 0. RASTREAMENTO META PIXEL & UTMIFY ──
-    // Dispara InitiateCheckout imediatamente ao abrir a página de checkout
-    if (typeof fbq === 'function') {
-      fbq('track', 'InitiateCheckout', {
-        value: 37.90,
-        currency: 'BRL',
-        content_name: 'RaizFinder - Método Completo'
-      });
-    }
+    // Dispara InitiateCheckout exatamente 1 vez quando o cliente abre o checkout
+    (function fireInitiateCheckoutOnce() {
+      if (typeof fbq === 'function' && !window._rf_initiate_checkout_fired) {
+        window._rf_initiate_checkout_fired = true;
+        fbq('track', 'InitiateCheckout', {
+          value: 37.90,
+          currency: 'BRL',
+          content_name: 'RaizFinder - Método Completo'
+        });
+      }
+    })();
 
     // Preserva e sincroniza parâmetros de UTM entre páginas e UTMify
     (function syncAndPreserveUtms() {
@@ -1322,15 +1327,6 @@
           sessionStorage.setItem('rf_utms', JSON.stringify(currentUtms));
           localStorage.setItem('rf_utms', JSON.stringify(currentUtms));
           sessionStorage.setItem('rf_query_string', window.location.search);
-        } catch (e) {}
-      } else {
-        // Se a URL abriu sem parâmetros, restaura da sessão para a UTMify registrar
-        try {
-          const qs = sessionStorage.getItem('rf_query_string');
-          if (qs && qs.length > 1) {
-            const newUrl = window.location.pathname + qs + window.location.hash;
-            window.history.replaceState(null, '', newUrl);
-          }
         } catch (e) {}
       }
     })();

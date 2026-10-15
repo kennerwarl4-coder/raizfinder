@@ -16,6 +16,8 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
+  fbq.disablePushState = true;
+  fbq('set', 'autoConfig', false, '4754698191442890');
   fbq('init', '4754698191442890');
   fbq('track', 'PageView');
   </script>
@@ -2060,15 +2062,21 @@
     setTimeout(syncCheckoutLinks, 800);
     setTimeout(syncCheckoutLinks, 2500);
 
-    // Evento InitiateCheckout quando o usuário clica em qualquer CTA para ir ao checkout
+    // Rolagem suave para âncoras (ex: #oferta) sem alterar hash na URL, evitando disparo indevido de PageView
     document.addEventListener('click', (e) => {
-      const ctaLink = e.target.closest('a[href*="checkout"]');
-      if (ctaLink && typeof fbq === 'function') {
-        fbq('track', 'InitiateCheckout', {
-          value: 37.90,
-          currency: 'BRL',
-          content_name: 'RaizFinder - Método Completo'
-        });
+      const anchor = e.target.closest('a[href^="#"]');
+      if (anchor) {
+        const href = anchor.getAttribute('href');
+        if (href === '#' || href === '') {
+          e.preventDefault();
+          return;
+        }
+        const targetId = href.slice(1);
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          e.preventDefault();
+          targetEl.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     });
   })();
